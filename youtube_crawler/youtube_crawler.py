@@ -16,7 +16,7 @@ class YoutubeCrawler(ScrapyCrawler):
             page = browser.new_page()
             
             # Get list of channels to crawl
-            channel_urls = parse_channel_list()
+            channel_urls = parse_channel_list_from_search()
             
             # Parse details for each channel
             for channel_url in channel_urls:
