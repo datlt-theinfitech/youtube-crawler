@@ -1,0 +1,83 @@
+[engine]
+type = "scrapy"
+
+[engine.settings]
+LOG_LEVEL = 'INFO'
+CONCURRENT_REQUESTS = 8
+PROXIES = [
+    
+    'http://mobi6:Infi2132@api.yourproxy.click:5106'
+]
+
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+
+[engine.settings.DOWNLOADER_MIDDLEWARES]
+'salesnext_crawler.engines.scrapy.middleware.RandomizedProxyMiddleware' = 740
+
+[engine.settings.DOWNLOAD_HANDLERS]
+http = 'salesnext_crawler.engines.scrapy.downloader.curl_impersonate.CurlImpersonateDownloadHandler'
+https = 'salesnext_crawler.engines.scrapy.downloader.curl_impersonate.CurlImpersonateDownloadHandler'
+
+[filesystems]
+
+[filesystems.local]
+type = 'LocalFileSystem'
+
+[logger]
+type = 'pyarrow'
+format = 'json'
+filesystem = 'local'
+path = 'data/{crawler_id}/logs/{chunk}.json'
+chunk_size = 1000
+
+# List of storages
+[storages]
+
+[storages.company]
+type = 'pyarrow'
+format = 'parquet'
+filesystem = 'local'
+path = 'data/{crawler_id}/rikunabi_company/{chunk}.parquet'
+key = 'company_id'
+chunk_size = 1000
+
+[storages.recruit]
+type = 'pyarrow'
+format = 'parquet'
+filesystem = 'local'
+path = 'data/{crawler_id}/rikunabi_recruit/{chunk}.parquet'
+key = 'job_id'
+chunk_size = 1000
+
+[storages.rikunabi_metadata]
+type = 'pyarrow'
+format = 'parquet'
+filesystem = 'local'
+path = 'data/{crawler_id}/rikunabi_metadata/{chunk}.parquet'
+chunk_size = 1000
+
+[storages.rikunabi_archive]
+type = 'pyarrow'
+format = 'parquet'
+filesystem = 'local'
+path = 'data/{crawler_id}/rikunabi_archive/{chunk}.parquet'
+chunk_size = 1000
+
+[storages.channel]
+type = 'pyarrow'
+format = 'parquet'
+filesystem = 'local'
+path = 'data/{crawler_id}/youtube_channel/{chunk}.parquet'
+chunk_size = 1000
+
+[readers]
+
+[readers.last_rikunabi_metadata]
+type = 'pyarrow'
+format = 'parquet'
+filesystem = 'local'
+# path = { type = 'env', env = 'LAST_rikunabi_METADATA_PATH' }
+path = 'data/567c0c6c-c845-4335-8252-f3542ae93805/rikunabi_metadata/*.parquet'
+
+[crawler]
+classname = 'youtube_crawler.youtube_crawler.YoutubeCrawler'
